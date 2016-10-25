@@ -22,7 +22,7 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();              // get an instance of the express Router
 
 
-app.use(express.static('./public/typescript_webpack_angular1_seed/dist'));
+app.use(express.static('./public/dist'));
 // middleware to use for all requests
 router.use(function(req, res, next) {
     // do logging
