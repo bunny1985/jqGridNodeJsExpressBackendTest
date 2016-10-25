@@ -66,13 +66,13 @@
 	__webpack_require__(37);
 	__webpack_require__(43);
 	var Decorators_1 = __webpack_require__(34);
-	__webpack_require__(47);
+	__webpack_require__(52);
 	var externalModulesNames = [
 	    'ui.router',
 	    'ui.bootstrap',
 	    'ngAnimate',
 	    'ngSanitize',
-	    'IngCommon'
+	    'BBGrid'
 	];
 	var baseModule = angular.module("App", externalModulesNames);
 	baseModule.config(stateConfig_1.provideState);
@@ -63250,7 +63250,7 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var Decorators_1 = __webpack_require__(34);
-	var GridService_1 = __webpack_require__(38);
+	var gridResource_1 = __webpack_require__(53);
 	var AppComponent = (function () {
 	    function AppComponent(gridResource) {
 	        this.gridResource = gridResource;
@@ -63261,8 +63261,8 @@
 	        Decorators_1.Component("App", "grid", {
 	            template: __webpack_require__(42)
 	        }),
-	        Decorators_1.Inject("GridResource"), 
-	        __metadata('design:paramtypes', [GridService_1.grid.GridResource])
+	        Decorators_1.Inject("gridResource"), 
+	        __metadata('design:paramtypes', [gridResource_1.GridResource])
 	    ], AppComponent);
 	    return AppComponent;
 	}());
@@ -63271,294 +63271,14 @@
 
 
 /***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-	    return c > 3 && r && Object.defineProperty(target, key, r), r;
-	};
-	var __metadata = (this && this.__metadata) || function (k, v) {
-	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-	};
-	var Decorators_1 = __webpack_require__(34);
-	__webpack_require__(39);
-	__webpack_require__(40);
-	var grid;
-	(function (grid) {
-	    var JqGirResModelSettings = (function () {
-	        function JqGirResModelSettings() {
-	            this.filters = new JqGirResModelSettingsFilter();
-	            this._search = true;
-	            this.rows = 25;
-	            this.page = 1;
-	            this.sidx = null;
-	            this.sord = "asc";
-	        }
-	        return JqGirResModelSettings;
-	    }());
-	    grid.JqGirResModelSettings = JqGirResModelSettings;
-	    var JqGirResModelSettingsFilter = (function () {
-	        function JqGirResModelSettingsFilter() {
-	            this.groupOp = "AND";
-	            this.rules = [];
-	            this.groups = [];
-	        }
-	        return JqGirResModelSettingsFilter;
-	    }());
-	    grid.JqGirResModelSettingsFilter = JqGirResModelSettingsFilter;
-	    var JqGridResourceObject = (function () {
-	        function JqGridResourceObject() {
-	            this.total = 0;
-	            this.page = 1;
-	            this.records = 0;
-	            this.rows = [];
-	        }
-	        return JqGridResourceObject;
-	    }());
-	    grid.JqGridResourceObject = JqGridResourceObject;
-	    function GridResourceFactory($http, $httpParamSerializer) {
-	        return function (url) {
-	            var service = new GridResource($http, $httpParamSerializer);
-	            service.url = url;
-	            return service;
-	        };
-	    }
-	    grid.GridResourceFactory = GridResourceFactory;
-	    GridResourceFactory.$inject = ["$http", "$httpParamSerializer"];
-	    var GridResource = (function () {
-	        function GridResource($http, $httpParamSerializer) {
-	            this.$http = $http;
-	            this.$httpParamSerializer = $httpParamSerializer;
-	            this.makeRequest = function (url, data) {
-	                var _this = this;
-	                var req = {
-	                    method: 'POST',
-	                    url: url,
-	                    headers: {
-	                        'Content-Type': 'application/x-www-form-urlencoded'
-	                    },
-	                    data: this.$httpParamSerializer(data)
-	                };
-	                this.working = true;
-	                this.error = false;
-	                var q = this.$http(req);
-	                q.then(function () {
-	                    _this.working = false;
-	                    _this.ready = true;
-	                });
-	                q.error(function () {
-	                    _this.working = false;
-	                    _this.error = true;
-	                });
-	                return q;
-	            };
-	            this.working = false;
-	            this.error = false;
-	            this.settings = new JqGirResModelSettings();
-	            this.model = new JqGridResourceObject();
-	        }
-	        GridResource.prototype.apply = function () {
-	            var _this = this;
-	            var uri = this.getUri();
-	            var promise = this.makeRequest(uri, this.settings);
-	            promise.then(function (response) {
-	                _this.model = response.data;
-	            });
-	            return promise;
-	        };
-	        GridResource.prototype.toggleSorting = function (colName) {
-	            this.settings.page = 1;
-	            if (this.settings.sidx == null || this.settings.sidx != colName) {
-	                this.settings.sidx = colName;
-	                this.settings.sord = "asc";
-	                this.apply();
-	                return "asc";
-	            }
-	            else {
-	                if (this.settings.sord == "asc") {
-	                    this.settings.sord = "desc";
-	                    this.apply();
-	                    return "desc";
-	                }
-	                else {
-	                    this.settings.sidx = null;
-	                    this.settings.sord = "asc";
-	                    this.apply();
-	                    return "";
-	                }
-	            }
-	        };
-	        GridResource.prototype.addRule = function (rule, apply) {
-	            if (apply === void 0) { apply = true; }
-	            this.removeRule(rule.field);
-	            this.settings.filters.rules.push(rule);
-	            if (apply) {
-	                this.apply();
-	            }
-	        };
-	        GridResource.prototype.getFirstElemetnVisibleNumber = function () {
-	            return ((this.settings.page - 1) * this.settings.rows) + 1;
-	        };
-	        GridResource.prototype.getLastElementVisibleNumber = function () {
-	            var lastonBaseOnPage = this.settings.page * this.settings.rows;
-	            if (lastonBaseOnPage > this.model.records) {
-	                return this.model.records;
-	            }
-	            return lastonBaseOnPage;
-	        };
-	        GridResource.prototype.removeRule = function (fieldName) {
-	            var _this = this;
-	            var removed = false;
-	            angular.forEach(this.settings.filters.rules, function (item, key) {
-	                if (removed)
-	                    return;
-	                if (item.field == fieldName) {
-	                    _this.settings.filters.rules.splice(key, 1);
-	                    removed = true;
-	                }
-	            });
-	        };
-	        GridResource.prototype.getUri = function () {
-	            var uri = "";
-	            ;
-	            if (angular.isFunction(this.url)) {
-	                uri = this.url();
-	            }
-	            else {
-	                uri = this.url;
-	            }
-	            return uri;
-	        };
-	        GridResource = __decorate([
-	            Decorators_1.Inject('$http', '$httpParamSerializer'),
-	            Decorators_1.Service("IngCommon", "GridResource"), 
-	            __metadata('design:paramtypes', [Function, Function])
-	        ], GridResource);
-	        return GridResource;
-	    }());
-	    grid.GridResource = GridResource;
-	})(grid = exports.grid || (exports.grid = {}));
-
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-	    return c > 3 && r && Object.defineProperty(target, key, r), r;
-	};
-	var __metadata = (this && this.__metadata) || function (k, v) {
-	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-	};
-	var Decorators_1 = __webpack_require__(34);
-	var JqSortDirective = (function () {
-	    function JqSortDirective($compile) {
-	        this.$compile = $compile;
-	        this.restrict = 'A';
-	        this.terminal = true;
-	        this.priority = 1000;
-	    }
-	    JqSortDirective.prototype.link = function (scope, element, attrs) {
-	        var grid = scope.$eval(attrs.jqSort);
-	        element.removeAttr("jq-sort");
-	        element.removeAttr("data-jq-sort");
-	        element.addClass("clickable");
-	        element.attr("ng-class", attrs.jqSort + ".settings.sidx=='" + attrs.column + "' ? 'sorted': '' ");
-	        scope.$watch(function () {
-	            return grid.settings.sidx;
-	        }, function (newValue, oldvalue) {
-	            var ico = element.find("i");
-	            if (newValue == attrs.column) {
-	                ico.show();
-	            }
-	            else {
-	                ico.hide();
-	            }
-	        });
-	        element.append(angular.element('<i style="float:right;" class="glyphicon"></i>'));
-	        element.bind("click", function () {
-	            var sortClass = grid.toggleSorting(attrs.column);
-	            angular.element(".sorted i ").hide();
-	            angular.element(".sorted i ").removeClass("glyphicon-chevron-down");
-	            angular.element(".sorted i ").removeClass("glyphicon-chevron-up");
-	            element.removeClass("asc");
-	            element.removeClass("desc");
-	            var ico = element.find("i");
-	            ico.removeClass("glyphicon-chevron-down");
-	            ico.removeClass("glyphicon-chevron-up");
-	            if (sortClass == "asc") {
-	                ico.show();
-	                ico.addClass("glyphicon-chevron-down");
-	            }
-	            else if (sortClass == "desc") {
-	                ico.show();
-	                ico.addClass("glyphicon-chevron-up");
-	            }
-	            element.addClass(sortClass);
-	        });
-	        this.$compile(element)(scope);
-	    };
-	    JqSortDirective = __decorate([
-	        Decorators_1.Directive("App", "jqSort"),
-	        Decorators_1.Inject("$compile"), 
-	        __metadata('design:paramtypes', [Object])
-	    ], JqSortDirective);
-	    return JqSortDirective;
-	}());
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-	    return c > 3 && r && Object.defineProperty(target, key, r), r;
-	};
-	var __metadata = (this && this.__metadata) || function (k, v) {
-	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-	};
-	var Decorators_1 = __webpack_require__(34);
-	var JqPager = (function () {
-	    function JqPager() {
-	    }
-	    JqPager = __decorate([
-	        Decorators_1.Component("IngCommon", "jqPager", {
-	            template: __webpack_require__(41),
-	            bindings: {
-	                grid: '=model'
-	            }
-	        }), 
-	        __metadata('design:paramtypes', [])
-	    ], JqPager);
-	    return JqPager;
-	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = JqPager;
-
-
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
-
-	module.exports = "<!--table_pagination -->\n<div class=\"fixed-table-pagination\" style=\"display: block;\">\n    <div class=\"pull-left pagination-detail\">\n        <span class=\"pagination-info\">Showing {{$ctrlgrid.getFirstElemetnVisibleNumber()}} to {{$ctrl.grid.getLastElementVisibleNumber()}} of {{$ctrl.grid.model.records}} rows</span>\n        <span class=\"page-list\">\n            <select ng-model=\"$ctrl.grid.settings.rows\" ng-change=\"$ctrl.grid.apply()\" convert-to-number>\n                <option value=\"{{25}}\" selected>25</option>\n                <option value=\"50\">50</option>\n                <option value=\"100\">100</option>\n                <option value=\"250\">250</option>\n            </select>\n            records per page\n        </span>\n    </div>\n    <div uib-pagination total-items=\"$ctrl.grid.model.records\" ng-model=\"$ctrl.grid.settings.page\" max-size=\"5\" class=\"pagination-sm pull-right\" boundary-link-numbers=\"true\" rotate=\"false\" items-per-page=\"$ctrl.grid.settings.rows\" ng-change=\"$ctrl.grid.apply()\" boundary-links=\"true\" first-text=\"‹‹\" last-text=\"››\">\n    </div>\n</div>\n<!--table_pagination_end-->";
-
-/***/ },
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
 /* 42 */
 /***/ function(module, exports) {
 
-	module.exports = "    <h1>TABLE</h1>\n\n    <input class=\"form\" ng-model=\"$ctrl.search\" ng-change=\"$ctrl.gridResource.addRule({op: 'cn' , field: 'name' , data: $ctrl.search })\"\n    />\n    <table class=\"table table-striped table-condensed\">\n        <thead>\n            <tr>\n                <th jq-sort=\"$ctrl.gridResource\" column=\"Id\" >Id</th>\n                <th jq-sort=\"$ctrl.gridResource\" column=\"Name\">Name</th>\n                <th jq-sort=\"$ctrl.gridResource\" column=\"Key\">Key</th>\n            </tr>\n\n        </thead>\n        <tbody>\n            <tr ng-repeat=\"item in $ctrl.gridResource.model.rows\">\n                <td>{{item.Id}}</td>\n                <td>{{item.Name}}</td>\n                <td>{{item.Key}}</td>\n            </tr>\n        </tbody>\n    </table>\n    <jq-pager model=\"$ctrl.gridResource\"></jq-pager> ";
+	module.exports = "    <h1>TABLE</h1>\n\n    <input class=\"form\" ng-model=\"$ctrl.search\" ng-change=\"$ctrl.gridResource.addRule({op: 'cn' , field: 'name' , data: $ctrl.search })\"\n    />\n    <table class=\"table table-striped table-condensed\">\n        <thead>\n            <tr>\n                <th grid-resource-sort=\"$ctrl.gridResource\" column=\"Id\" >Id</th>\n                <th grid-resource-sort=\"$ctrl.gridResource\" column=\"Name\">Name</th>\n                <th grid-resource-sort=\"$ctrl.gridResource\" column=\"Key\">Key</th>\n            </tr>\n\n        </thead>\n        <tbody>\n            <tr ng-repeat=\"item in $ctrl.gridResource.model.rows\">\n                <td>{{item.Id}}</td>\n                <td>{{item.Name}}</td>\n                <td>{{item.Key}}</td>\n            </tr>\n        </tbody>\n    </table>\n    <grid-resource-pager model=\"$ctrl.gridResource\"></grid-resource-pager> ";
 
 /***/ },
 /* 43 */
@@ -63643,21 +63363,25 @@
 	module.exports = "\nError State \n\n\n<h1>\n    Buuuuu: {{$ctrl.msg}}\n</h1>\n\n<a ui-sref=\"home\" class=\"ing-link\">\n    Go Back \n\n</a>";
 
 /***/ },
-/* 47 */
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var Decorators_1 = __webpack_require__(34);
-	__webpack_require__(48);
-	__webpack_require__(50);
-	var GridService_1 = __webpack_require__(38);
-	var common = angular.module("IngCommon", ["ui.bootstrap"]);
+	__webpack_require__(53);
+	__webpack_require__(58);
+	__webpack_require__(59);
+	var common = angular.module("BBGrid", ["ui.bootstrap"]);
 	Decorators_1.Bootstraper.BootstrapModule(common);
-	common.factory("GridResourceFactory", GridService_1.grid.GridResourceFactory);
 
 
 /***/ },
-/* 48 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -63671,29 +63395,195 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var Decorators_1 = __webpack_require__(34);
-	var HeaderComponent = (function () {
-	    function HeaderComponent() {
+	var gridResourceModel_1 = __webpack_require__(54);
+	var gridResourceSettings_1 = __webpack_require__(55);
+	var GridResource = (function () {
+	    function GridResource($http, $httpParamSerializer) {
+	        this.$http = $http;
+	        this.$httpParamSerializer = $httpParamSerializer;
+	        this.makeRequest = function (url, data) {
+	            var _this = this;
+	            var req = {
+	                method: 'POST',
+	                url: url,
+	                headers: {
+	                    'Content-Type': 'application/x-www-form-urlencoded'
+	                },
+	                data: this.$httpParamSerializer(data)
+	            };
+	            this.working = true;
+	            this.error = false;
+	            var q = this.$http(req);
+	            q.then(function () {
+	                _this.working = false;
+	                _this.ready = true;
+	            });
+	            q.error(function () {
+	                _this.working = false;
+	                _this.error = true;
+	            });
+	            return q;
+	        };
+	        this.working = false;
+	        this.error = false;
+	        this.settings = new gridResourceSettings_1.GridResourceSettings();
+	        this.model = new gridResourceModel_1.default();
 	    }
-	    HeaderComponent = __decorate([
-	        Decorators_1.Component("IngCommon", "ingHeader", {
-	            template: __webpack_require__(49)
-	        }), 
-	        __metadata('design:paramtypes', [])
-	    ], HeaderComponent);
-	    return HeaderComponent;
+	    GridResource.prototype.apply = function () {
+	        var _this = this;
+	        var uri = this.getUri();
+	        var promise = this.makeRequest(uri, this.settings);
+	        promise.then(function (response) {
+	            _this.model = response.data;
+	        });
+	        return promise;
+	    };
+	    GridResource.prototype.toggleSorting = function (colName) {
+	        this.settings.page = 1;
+	        if (this.settings.sidx == null || this.settings.sidx != colName) {
+	            this.settings.sidx = colName;
+	            this.settings.sord = "asc";
+	            this.apply();
+	            return "asc";
+	        }
+	        else {
+	            if (this.settings.sord == "asc") {
+	                this.settings.sord = "desc";
+	                this.apply();
+	                return "desc";
+	            }
+	            else {
+	                this.settings.sidx = null;
+	                this.settings.sord = "asc";
+	                this.apply();
+	                return "";
+	            }
+	        }
+	    };
+	    GridResource.prototype.addRule = function (rule, apply) {
+	        if (apply === void 0) { apply = true; }
+	        this.removeRule(rule.field);
+	        this.settings.filters.rules.push(rule);
+	        if (apply) {
+	            this.apply();
+	        }
+	    };
+	    GridResource.prototype.getFirstElemetnVisibleNumber = function () {
+	        return ((this.settings.page - 1) * this.settings.rows) + 1;
+	    };
+	    GridResource.prototype.getLastElementVisibleNumber = function () {
+	        var lastonBaseOnPage = this.settings.page * this.settings.rows;
+	        if (lastonBaseOnPage > this.model.records) {
+	            return this.model.records;
+	        }
+	        return lastonBaseOnPage;
+	    };
+	    GridResource.prototype.removeRule = function (fieldName) {
+	        var _this = this;
+	        var removed = false;
+	        angular.forEach(this.settings.filters.rules, function (item, key) {
+	            if (removed)
+	                return;
+	            if (item.field == fieldName) {
+	                _this.settings.filters.rules.splice(key, 1);
+	                removed = true;
+	            }
+	        });
+	    };
+	    GridResource.prototype.getUri = function () {
+	        var uri = "";
+	        ;
+	        if (angular.isFunction(this.url)) {
+	            uri = this.url();
+	        }
+	        else {
+	            uri = this.url;
+	        }
+	        return uri;
+	    };
+	    GridResource = __decorate([
+	        Decorators_1.Inject('$http', '$httpParamSerializer'),
+	        Decorators_1.Service("BBGrid", "gridResource"), 
+	        __metadata('design:paramtypes', [Function, Function])
+	    ], GridResource);
+	    return GridResource;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = HeaderComponent;
+	exports.GridResource = GridResource;
 
 
 /***/ },
-/* 49 */
+/* 54 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n    <div class=\"page-header\">\n        <h1>Bopotstrap styles <small>enabled</small></h1>\n    </div>\n</div>";
+	"use strict";
+	var GridResourceModel = (function () {
+	    function GridResourceModel() {
+	        this.total = 0;
+	        this.page = 1;
+	        this.records = 0;
+	        this.rows = [];
+	    }
+	    return GridResourceModel;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = GridResourceModel;
+
 
 /***/ },
-/* 50 */
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var gridResourceSettingsFilter_1 = __webpack_require__(56);
+	exports.GridResourceSettingsFilter = gridResourceSettingsFilter_1.GridResourceSettingsFilter;
+	var GridResourceSettings = (function () {
+	    function GridResourceSettings() {
+	        this.filters = new gridResourceSettingsFilter_1.GridResourceSettingsFilter();
+	        this._search = true;
+	        this.rows = 25;
+	        this.page = 1;
+	        this.sidx = null;
+	        this.sord = "asc";
+	    }
+	    return GridResourceSettings;
+	}());
+	exports.GridResourceSettings = GridResourceSettings;
+
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var gridResourceSettignsFilterRule_1 = __webpack_require__(57);
+	exports.GridResourceSettignsFilterRule = gridResourceSettignsFilterRule_1.default;
+	var GridResourceSettingsFilter = (function () {
+	    function GridResourceSettingsFilter() {
+	        this.groupOp = "AND";
+	        this.rules = [];
+	        this.groups = [];
+	    }
+	    return GridResourceSettingsFilter;
+	}());
+	exports.GridResourceSettingsFilter = GridResourceSettingsFilter;
+
+
+/***/ },
+/* 57 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var JqGirResModelSettingsFilterRule = (function () {
+	    function JqGirResModelSettingsFilterRule() {
+	    }
+	    return JqGirResModelSettingsFilterRule;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = JqGirResModelSettingsFilterRule;
+
+
+/***/ },
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -63707,26 +63597,100 @@
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var Decorators_1 = __webpack_require__(34);
-	var FooterComponent = (function () {
-	    function FooterComponent() {
+	var GridResourceSort = (function () {
+	    function GridResourceSort($compile) {
+	        this.$compile = $compile;
+	        this.restrict = 'A';
+	        this.terminal = true;
+	        this.priority = 1000;
 	    }
-	    FooterComponent = __decorate([
-	        Decorators_1.Component("IngCommon", "ingFooter", {
-	            template: __webpack_require__(51)
-	        }), 
-	        __metadata('design:paramtypes', [])
-	    ], FooterComponent);
-	    return FooterComponent;
+	    GridResourceSort.prototype.link = function (scope, element, attrs) {
+	        var grid = scope.$eval(attrs.gridResourceSort);
+	        element.removeAttr("grid-resource-sort");
+	        element.removeAttr("data-grid-resource-sort");
+	        element.addClass("clickable");
+	        element.attr("ng-class", attrs.jqSort + ".settings.sidx=='" + attrs.column + "' ? 'sorted': '' ");
+	        scope.$watch(function () {
+	            return grid.settings.sidx;
+	        }, function (newValue, oldvalue) {
+	            var ico = element.find("i");
+	            if (newValue == attrs.column) {
+	                ico.show();
+	            }
+	            else {
+	                ico.hide();
+	            }
+	        });
+	        element.append(angular.element('<i style="float:right;" class="glyphicon"></i>'));
+	        element.bind("click", function () {
+	            var sortClass = grid.toggleSorting(attrs.column);
+	            angular.element(".sorted i ").hide();
+	            angular.element(".sorted i ").removeClass("glyphicon-chevron-down");
+	            angular.element(".sorted i ").removeClass("glyphicon-chevron-up");
+	            element.removeClass("asc");
+	            element.removeClass("desc");
+	            var ico = element.find("i");
+	            ico.removeClass("glyphicon-chevron-down");
+	            ico.removeClass("glyphicon-chevron-up");
+	            if (sortClass == "asc") {
+	                ico.show();
+	                ico.addClass("glyphicon-chevron-down");
+	            }
+	            else if (sortClass == "desc") {
+	                ico.show();
+	                ico.addClass("glyphicon-chevron-up");
+	            }
+	            element.addClass(sortClass);
+	        });
+	        this.$compile(element)(scope);
+	    };
+	    GridResourceSort = __decorate([
+	        Decorators_1.Directive("App", "gridResourceSort"),
+	        Decorators_1.Inject("$compile"), 
+	        __metadata('design:paramtypes', [Object])
+	    ], GridResourceSort);
+	    return GridResourceSort;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = FooterComponent;
 
 
 /***/ },
-/* 51 */
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var Decorators_1 = __webpack_require__(34);
+	var GridResourcePager = (function () {
+	    function GridResourcePager() {
+	    }
+	    GridResourcePager = __decorate([
+	        Decorators_1.Component("BBGrid", "gridResourcePager", {
+	            template: __webpack_require__(60),
+	            bindings: {
+	                grid: '=model'
+	            }
+	        }), 
+	        __metadata('design:paramtypes', [])
+	    ], GridResourcePager);
+	    return GridResourcePager;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = GridResourcePager;
+
+
+/***/ },
+/* 60 */
 /***/ function(module, exports) {
 
-	module.exports = "<hr/>\n<div>\n    <center>\n        STOPKA \n    </center>\n</div>\n";
+	module.exports = "<!--table_pagination -->\n<div class=\"fixed-table-pagination\" style=\"display: block;\">\n    <div class=\"pull-left pagination-detail\">\n        <span class=\"pagination-info\">Showing {{$ctrlgrid.getFirstElemetnVisibleNumber()}} to {{$ctrl.grid.getLastElementVisibleNumber()}} of {{$ctrl.grid.model.records}} rows</span>\n        <span class=\"page-list\">\n            <select ng-model=\"$ctrl.grid.settings.rows\" ng-change=\"$ctrl.grid.apply()\" convert-to-number>\n                <option value=\"{{25}}\" selected>25</option>\n                <option value=\"50\">50</option>\n                <option value=\"100\">100</option>\n                <option value=\"250\">250</option>\n            </select>\n            records per page\n        </span>\n    </div>\n    <div uib-pagination total-items=\"$ctrl.grid.model.records\" ng-model=\"$ctrl.grid.settings.page\" max-size=\"5\" class=\"pagination-sm pull-right\" boundary-link-numbers=\"true\" rotate=\"false\" items-per-page=\"$ctrl.grid.settings.rows\" ng-change=\"$ctrl.grid.apply()\" boundary-links=\"true\" first-text=\"‹‹\" last-text=\"››\">\n    </div>\n</div>\n<!--table_pagination_end-->";
 
 /***/ }
 /******/ ]);

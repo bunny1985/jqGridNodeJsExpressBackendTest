@@ -17,14 +17,14 @@ import {Bootstraper } from "angular1_typescript_decorators/Decorators";
 
 
 
-import  "./modules/application/common/CommonModule";
+import  "./modules/application/grid/gridModule";
 
 const externalModulesNames:Array<any> = [
   'ui.router',
   'ui.bootstrap',
   'ngAnimate',
   'ngSanitize',  
-  'IngCommon'
+  'BBGrid'
   ];
 
 var baseModule  = angular.module("App" , externalModulesNames);

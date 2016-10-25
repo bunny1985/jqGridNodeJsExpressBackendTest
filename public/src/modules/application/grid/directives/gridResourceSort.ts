@@ -3,9 +3,9 @@ import {Bootstraper, Inject , Directive} from "angular1_typescript_decorators/De
 
 
 
-@Directive("App" , "jqSort")
+@Directive("App" , "gridResourceSort")
 @Inject("$compile")
-class JqSortDirective implements ng.IDirective {
+class GridResourceSort implements ng.IDirective {
     restrict = 'A';            
     terminal:boolean=  true;
     priority:number=  1000;
@@ -18,10 +18,10 @@ class JqSortDirective implements ng.IDirective {
     }
 
     link  (scope: any, element: ng.IAugmentedJQuery, attrs: any) {
-                let grid = scope.$eval(attrs.jqSort);
+                let grid = scope.$eval(attrs.gridResourceSort);
                 
-                element.removeAttr("jq-sort") //also removing data element  
-                element.removeAttr("data-jq-sort") //also removing data element  
+                element.removeAttr("grid-resource-sort") //also removing data element  
+                element.removeAttr("data-grid-resource-sort") //also removing data element  
                 element.addClass("clickable"); // this calss should show cursor on Hover
                 element.attr("ng-class", attrs.jqSort + ".settings.sidx=='" + attrs.column + "' ? 'sorted': '' ");
                 
@@ -63,6 +63,3 @@ class JqSortDirective implements ng.IDirective {
 
 
 }
-
-
-
