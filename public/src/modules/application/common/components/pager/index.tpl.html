@@ -1,0 +1,18 @@
+﻿<!--table_pagination -->
+<div class="fixed-table-pagination" style="display: block;">
+    <div class="pull-left pagination-detail">
+        <span class="pagination-info">Showing {{$ctrlgrid.getFirstElemetnVisibleNumber()}} to {{$ctrl.grid.getLastElementVisibleNumber()}} of {{$ctrl.grid.model.records}} rows</span>
+        <span class="page-list">
+            <select ng-model="$ctrl.grid.settings.rows" ng-change="$ctrl.grid.apply()" convert-to-number>
+                <option value="{{25}}" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+            </select>
+            records per page
+        </span>
+    </div>
+    <div uib-pagination total-items="$ctrl.grid.model.records" ng-model="$ctrl.grid.settings.page" max-size="5" class="pagination-sm pull-right" boundary-link-numbers="true" rotate="false" items-per-page="$ctrl.grid.settings.rows" ng-change="$ctrl.grid.apply()" boundary-links="true" first-text="‹‹" last-text="››">
+    </div>
+</div>
+<!--table_pagination_end-->

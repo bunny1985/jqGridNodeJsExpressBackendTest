@@ -1,0 +1,26 @@
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+  <div class="container">
+      <ul  class="nav navbar-nav">
+    <li><a ui-sref="home">Home</a></li>
+    <li><a ui-sref="home.grid">Grid</a></li>
+    <li><a ui-sref="error({message: 'Bula bula '})" class="ing-link">
+        Error link
+    </a>
+    </li>
+    </ul>
+  </div>
+</nav>
+<div> 
+    <ing-Header></ing-Header>
+    <center>
+        <img src="{{$ctrl.res.catImg}}" width="100"/>
+    </center>
+    
+
+    <div style="margin:10px;">
+        
+    
+    <ui-view></ui-view>
+    </div>
+    <ing-footer></ing-footer>
+</div>
